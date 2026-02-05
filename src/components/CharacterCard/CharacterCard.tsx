@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Heart, Trash2, MessageSquare } from "lucide-react";
 import type { Character } from "../../types/character";
 import { useComments } from "../../hooks/useComments";
@@ -27,6 +27,11 @@ export default function CharacterCard({
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [isFav, setIsFav] = useState(isFavorite);
+
+  // Sincronizar isFav con el prop isFavorite cuando cambie
+  useEffect(() => {
+    setIsFav(isFavorite);
+  }, [isFavorite]);
 
   const comments = getComments(character.id);
 
