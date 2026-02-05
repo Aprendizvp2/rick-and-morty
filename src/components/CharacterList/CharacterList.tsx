@@ -1,7 +1,7 @@
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { useQuery } from "@apollo/client/react";
 import { GET_CHARACTERS } from "../../services/graphql/queries";
-import { Filter, Search, ChevronDown } from "lucide-react";
+import { Search } from "lucide-react";
 import type { Character, FilterOptions } from "../../types/character";
 import CharacterCard from "../CharacterCard/CharacterCard";
 import CharacterDetail from "../CharacterDetail/CharacterDetail";
@@ -9,6 +9,8 @@ import { useFavorites } from "../../hooks/useFavorites";
 import { motion, AnimatePresence } from "framer-motion";
 import Filters from "../Filters/Filters";
 import Loading from "../Loading/Loading";
+import { FilterIcon } from "../../assets/icons";
+import { SortIcon } from "../../assets/icons";
 
 type CharactersQueryResult = {
   characters: {
@@ -21,7 +23,7 @@ type CharactersQueryResult = {
 
 type CharacterFilterType = "all" | "starred" | "others";
 
-const CharacterList: React.FC = () => {
+export default function CharacterList() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [appliedFilters, setAppliedFilters] = useState<FilterOptions>({});
   const [appliedCharacterFilter, setAppliedCharacterFilter] =
@@ -49,22 +51,6 @@ const CharacterList: React.FC = () => {
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
-
-  // Cerrar dropdown al hacer click fuera
-  //   useEffect(() => {
-  //     const handleClickOutside = (event: MouseEvent) => {
-  //       if (
-  //         filtersRef.current &&
-  //         !filtersRef.current.contains(event.target as Node) &&
-  //         showFiltersDropdown
-  //       ) {
-  //         setShowFiltersDropdown(false);
-  //       }
-  //     };
-
-  //     document.addEventListener("mousedown", handleClickOutside);
-  //     return () => document.removeEventListener("mousedown", handleClickOutside);
-  //   }, [showFiltersDropdown]);
 
   const { loading, error, data, refetch } = useQuery<CharactersQueryResult>(
     GET_CHARACTERS,
@@ -184,7 +170,6 @@ const CharacterList: React.FC = () => {
     });
   };
 
-
   const handleLoadMore = () => {
     setPage((prev) => prev + 1);
   };
@@ -231,22 +216,14 @@ const CharacterList: React.FC = () => {
               >
                 <button
                   onClick={() => {
-                    console.log("🔄 Toggle filters dropdown");
                     setShowFiltersDropdown(!showFiltersDropdown);
                   }}
                   className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-1.5 rounded-md transition-all z-50 text-sm sm:text-base ${
                     showFiltersDropdown ||
-                    Object.keys(appliedFilters).length > 0 ||
-                    appliedCharacterFilter !== "all"
-                      ? "bg-primary-600 text-white"
-                      : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                    Object.keys(appliedFilters).length > 0
                   }`}
                 >
-                  <Filter className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  <span className="hidden xs:inline">Filter</span>
-                  <ChevronDown
-                    className={`h-3 w-3 sm:h-3 sm:w-3 transition-transform ${showFiltersDropdown ? "rotate-180" : ""}`}
-                  />
+                  <FilterIcon className="text-primary-700" />
                 </button>
               </div>
             </div>
@@ -256,8 +233,9 @@ const CharacterList: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleSort}
-              className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors whitespace-nowrap shadow-sm text-sm sm:text-base"
+              className="w-full flex flex-row items-center justify-center gap-2 sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors whitespace-nowrap shadow-sm text-sm sm:text-base"
             >
+              <SortIcon className="text-white" />
               Sort {sortOrder === "asc" ? "A-Z" : "Z-A"}
             </motion.button>
           </div>
@@ -352,18 +330,15 @@ const CharacterList: React.FC = () => {
           <Filters
             isOpen={showFiltersDropdown}
             onClose={() => {
-              console.log("🔄 Cerrando modal de filtros");
               setShowFiltersDropdown(false);
             }}
             filters={appliedFilters}
             characterFilter={appliedCharacterFilter}
             onApplyFilter={(filters, characterFilter) => {
-              console.log("✅ Aplicando filtros desde modal:", filters, characterFilter);
               handleApplyFilter(filters, characterFilter);
               setShowFiltersDropdown(false);
             }}
             onClearFilters={() => {
-              console.log("🗑️ Limpiando filtros");
               clearFilters();
             }}
           />
@@ -575,6 +550,4 @@ const CharacterList: React.FC = () => {
       </AnimatePresence>
     </div>
   );
-};
-
-export default CharacterList;
+}

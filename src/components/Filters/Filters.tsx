@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { X } from "lucide-react";
 import type { FilterOptions } from "../../types/character";
 
@@ -16,13 +16,13 @@ interface FiltersProps {
   onClearFilters: () => void;
 }
 
-const Filters: React.FC<FiltersProps> = ({
+export default function Filters({
   onClose,
   filters,
   characterFilter,
   onApplyFilter,
   onClearFilters,
-}) => {
+}: FiltersProps) {
   // Estado local - sincronizar con props cuando cambian
   const [localFilters, setLocalFilters] = useState(filters);
   const [localCharacterFilter, setLocalCharacterFilter] =
@@ -70,8 +70,7 @@ const Filters: React.FC<FiltersProps> = ({
         onClick={(e) => e.stopPropagation()} // 🔥 ESTO ES CLAVE
       >
         {/* Header */}
-        <div className="p-4 border-b bg-white flex justify-between items-center">
-          <h3 className="font-semibold text-gray-900 text-lg">Filters</h3>
+        <div className="p-4 bg-white flex justify-end items-center">
           <button
             onClick={onClose}
             className="p-1.5 hover:bg-gray-100 rounded-lg"
@@ -109,7 +108,6 @@ const Filters: React.FC<FiltersProps> = ({
                       : option === "others"
                         ? "Others"
                         : "All"}
-                    {localCharacterFilter === option && " ✓"}
                   </button>
                 ),
               )}
@@ -118,19 +116,9 @@ const Filters: React.FC<FiltersProps> = ({
 
           {/* Species Filter */}
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">
-              Species
-            </h3>
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">Specie</h3>
             <div className="flex flex-wrap gap-2">
-              {[
-                "All",
-                "Human",
-                "Alien",
-                "Humanoid",
-                "Robot",
-                "Animal",
-                "Mythological",
-              ].map((specie) => (
+              {["All", "Human", "Alien"].map((specie) => (
                 <button
                   key={specie}
                   onClick={(e) => {
@@ -145,7 +133,6 @@ const Filters: React.FC<FiltersProps> = ({
                   type="button"
                 >
                   {specie}
-                  {isActive("species", specie) && " ✓"}
                 </button>
               ))}
             </div>
@@ -170,7 +157,6 @@ const Filters: React.FC<FiltersProps> = ({
                   type="button"
                 >
                   {status}
-                  {isActive("status", status) && " ✓"}
                 </button>
               ))}
             </div>
@@ -196,7 +182,6 @@ const Filters: React.FC<FiltersProps> = ({
                     type="button"
                   >
                     {gender}
-                    {isActive("gender", gender) && " ✓"}
                   </button>
                 ),
               )}
@@ -205,7 +190,7 @@ const Filters: React.FC<FiltersProps> = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="p-4 border-t bg-white">
+        <div className="p-4  bg-white">
           <div className="flex gap-3">
             <button
               onClick={(e) => {
@@ -215,7 +200,7 @@ const Filters: React.FC<FiltersProps> = ({
               className="flex-1 px-4 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
               type="button"
             >
-              Apply Filters
+              Filter
             </button>
             <button
               onClick={(e) => {
@@ -232,6 +217,4 @@ const Filters: React.FC<FiltersProps> = ({
       </div>
     </div>
   );
-};
-
-export default Filters;
+}

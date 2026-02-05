@@ -1,7 +1,6 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
-const Loading: React.FC = () => {
+export default function Loading() {
   return (
     <div className="flex justify-center items-center py-4">
       <div className="flex items-center gap-2">
@@ -16,7 +15,7 @@ const Loading: React.FC = () => {
               duration: 0.6,
               repeat: Infinity,
               delay: i * 0.2,
-              ease: "easeInOut"
+              ease: "easeInOut",
             }}
           />
         ))}
@@ -24,6 +23,4 @@ const Loading: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default Loading;
+}

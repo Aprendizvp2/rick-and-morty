@@ -14,7 +14,7 @@ interface CharacterCardProps {
   id?: string;
 }
 
-const CharacterCard: React.FC<CharacterCardProps> = ({
+export default function CharacterCard({
   character,
   onSoftDelete,
   onToggleFavorite,
@@ -22,7 +22,7 @@ const CharacterCard: React.FC<CharacterCardProps> = ({
   isSelected = false,
   isFavorite = false,
   id,
-}) => {
+}: CharacterCardProps) {
   const { getComments, addComment } = useComments();
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState("");
@@ -57,8 +57,8 @@ const CharacterCard: React.FC<CharacterCardProps> = ({
       whileTap={{ scale: 0.98 }}
       className={`
         flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg transition-all duration-200 cursor-pointer 
-        border border-transparent hover:border-primary-100
-        ${isSelected ? "bg-primary-100 border-primary-300" : "hover:bg-gray-50"}
+        border-b-2 border-gray-200 hover:border-primary-100
+        ${isSelected ? "bg-primary-100 border-primary-300" : "hover:bg-gray-50 rounded-none"}
         mx-1 sm:mx-0
       `}
     >
@@ -69,77 +69,78 @@ const CharacterCard: React.FC<CharacterCardProps> = ({
           alt={character.name}
           className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full object-cover shadow"
         />
-        {/* Favorite Heart */}
-        <motion.button
-          onClick={handleFavoriteClick}
-          whileHover={{ scale: 1.2 }}
-          whileTap={{ scale: 0.9 }}
-          className="absolute -bottom-1 -right-1 p-1 bg-white rounded-full shadow-sm"
-          animate={{ scale: isFav ? 1.1 : 1 }}
-          transition={{ duration: 0.2 }}
-        >
-          {isFav ? (
-            <Heart className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-secondary-600 fill-secondary-600" />
-          ) : (
-            <Heart className="h-3 w-3 sm:h-3.5 sm:w-3.5 bg-transparent text-gray-400 hover:text-secondary-600" />
-          )}
-        </motion.button>
       </div>
 
       {/* Character Info */}
       <div className="flex-1 min-w-0">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-1">
-          <div className="mb-1 sm:mb-0">
-            <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
-              {character.name}
-            </h3>
-            <p className="text-xs sm:text-sm text-gray-500">
-              {character.species}
-            </p>
+        <div className="flex flex-row justify-between items-center gap-2">
+          <div>
+            <div className="mb-1 sm:mb-0">
+              <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
+                {character.name}
+              </h3>
+              <p className="text-xs sm:text-sm text-gray-500">
+                {character.species}
+              </p>
+              {/* Status Badge */}
+              <motion.span
+                className={`px-2 py-1 rounded-full text-xs font-medium shrink-0 w-fit sm:w-auto ${
+                  character.status === "Alive"
+                    ? "bg-green-100 text-green-800"
+                    : character.status === "Dead"
+                      ? "bg-red-100 text-red-800"
+                      : "bg-gray-100 text-gray-800"
+                }`}
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+              >
+                {character.status}
+              </motion.span>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center gap-3 sm:gap-4 mt-2 sm:mt-3 pt-2 sm:pt-3">
+              {/* Comments Button */}
+              <motion.button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowComments(!showComments);
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-1.5 text-xs sm:text-sm text-primary-600 hover:text-primary-700"
+              >
+                <MessageSquare className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span>{comments.length}</span>
+              </motion.button>
+
+              {/* Soft Delete Button */}
+              <motion.button
+                onClick={handleDeleteClick}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-1.5 text-xs sm:text-sm text-gray-500 hover:text-red-600"
+              >
+                <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden xs:inline">Remove</span>
+                <span className="xs:hidden">Del</span>
+              </motion.button>
+            </div>
           </div>
-          
-          {/* Status Badge */}
-          <motion.span
-            className={`px-2 py-1 rounded-full text-xs font-medium shrink-0 w-fit sm:w-auto ${
-              character.status === "Alive"
-                ? "bg-green-100 text-green-800"
-                : character.status === "Dead"
-                  ? "bg-red-100 text-red-800"
-                  : "bg-gray-100 text-gray-800"
-            }`}
-            whileHover={{ scale: 1.05 }}
+          {/* Favorite Heart */}
+          <motion.button
+            onClick={handleFavoriteClick}
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
+            className=" bg-white p-2 rounded-full shadow-sm cursor-pointer"
+            animate={{ scale: isFav ? 1.1 : 1 }}
             transition={{ duration: 0.2 }}
           >
-            {character.status}
-          </motion.span>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex items-center gap-3 sm:gap-4 mt-2 sm:mt-3 pt-2 sm:pt-3 border-t">
-          {/* Comments Button */}
-          <motion.button
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowComments(!showComments);
-            }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-1.5 text-xs sm:text-sm text-primary-600 hover:text-primary-700"
-          >
-            <MessageSquare className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            <span>{comments.length}</span>
-          </motion.button>
-
-          {/* Soft Delete Button */}
-          <motion.button
-            onClick={handleDeleteClick}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-1.5 text-xs sm:text-sm text-gray-500 hover:text-red-600"
-          >
-            <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            <span className="hidden xs:inline">Remove</span>
-            <span className="xs:hidden">Del</span>
+            {isFav ? (
+              <Heart className="h-3 w-3 sm:h-6 sm:w-6 text-secondary-600 fill-secondary-600" />
+            ) : (
+              <Heart className="h-3 w-3 sm:h-6 sm:w-6 bg-transparent text-gray-400 hover:text-secondary-600" />
+            )}
           </motion.button>
         </div>
 
@@ -208,6 +209,4 @@ const CharacterCard: React.FC<CharacterCardProps> = ({
       </div>
     </motion.div>
   );
-};
-
-export default CharacterCard;
+}
