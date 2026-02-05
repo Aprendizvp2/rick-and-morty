@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { X, Heart, HeartOff } from "lucide-react";
 import type { Character } from "../../types/character";
@@ -10,11 +9,11 @@ interface CharacterDetailProps {
   isMobile?: boolean;
 }
 
-const CharacterDetail: React.FC<CharacterDetailProps> = ({
+export default function CharacterDetail({
   character,
   onClose,
   isMobile = false,
-}) => {
+}: CharacterDetailProps) {
   const { favorites } = useFavorites();
   const isFavorite = favorites.includes(character.id);
 
@@ -54,16 +53,13 @@ const CharacterDetail: React.FC<CharacterDetailProps> = ({
       </div>
       <div className="p-12 from-primary-50 to-white">
         {/* Contenedor de la imagen con posición relativa */}
-        <motion.div 
-          variants={itemVariants}
-          className="relative inline-block"
-        >
+        <motion.div variants={itemVariants} className="relative inline-block">
           <img
             src={character.image}
             alt={character.name}
             className="w-20 h-20 object-cover rounded-full shadow-lg"
           />
-          
+
           {/* Corazón sobrepuesto en esquina inferior derecha */}
           <motion.button
             variants={itemVariants}
@@ -145,6 +141,4 @@ const CharacterDetail: React.FC<CharacterDetailProps> = ({
       </div>
     </motion.div>
   );
-};
-
-export default CharacterDetail;
+}
