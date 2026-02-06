@@ -62,13 +62,14 @@ export default function Filters({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Overlay - cierra al hacer clic */}
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/50" onClick={onClose} data-testid="filter-overlay" />
 
       {/* Modal - NO cierra al hacer clic dentro */}
-      <div
-        className="relative w-full max-w-md bg-white rounded-xl shadow-2xl border border-gray-200 max-h-[85vh] flex flex-col z-10"
-        onClick={(e) => e.stopPropagation()} // 🔥 ESTO ES CLAVE
-      >
+        <div
+          className="relative w-full max-w-md bg-white rounded-xl shadow-2xl border border-gray-200 max-h-[85vh] flex flex-col z-10"
+          role="dialog"
+          aria-modal="true"
+        >
         {/* Header */}
         <div className="p-4 bg-white flex justify-end items-center">
           <button

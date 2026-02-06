@@ -378,7 +378,7 @@ export default function CharacterList() {
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
                             transition={{ duration: 0.2, ease: "easeInOut" }}
-                            layout
+                            layout="position"
                           >
                             <CharacterCard
                               id={`character-${character.id}`}
@@ -435,7 +435,7 @@ export default function CharacterList() {
                             ease: "easeInOut",
                             delay: index * 0.03,
                           }}
-                          layout
+                          layout="position"
                         >
                           <CharacterCard
                             id={`character-${character.id}`}

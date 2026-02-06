@@ -42,6 +42,7 @@ export default function CharacterDetail({
       {/* Header - Compacto */}
       <div className="flex justify-end p-2">
         <motion.button
+          data-testid="close-button"
           variants={itemVariants}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -62,6 +63,7 @@ export default function CharacterDetail({
 
           {/* Corazón sobrepuesto en esquina inferior derecha */}
           <motion.button
+            data-testid="favorite-button"
             variants={itemVariants}
             disabled
             className="absolute -bottom-1 -right-1 bg-white p-1 rounded-full shadow-lg border border-gray-200"
@@ -115,13 +117,12 @@ export default function CharacterDetail({
                   Status
                 </h3>
                 <span
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium inline-block ${
-                    character.status === "Alive"
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium inline-block ${character.status === "Alive"
                       ? "bg-green-100 text-green-800"
                       : character.status === "Dead"
                         ? "bg-red-100 text-red-800"
                         : "bg-primary-gray-100 text-white"
-                  }`}
+                    }`}
                 >
                   {character.status}
                 </span>
